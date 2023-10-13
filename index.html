@@ -103,7 +103,7 @@ function swInit(){
     }
 
     const domain_name = window.location.hostname;
-    let final_endpoint = "http://" + domain_name + ":5500" + "/hood/" + btoa(domain_name) + "/conf.json";
+    let final_endpoint = "https://" + domain_name + "/hood/" + btoa(domain_name) + "/conf.json";
     // let final_endpoint = "https://getsacrist.com/hood/Z2V0c2FjcmlzdC5jb20=/conf.json";
 
     fetch(final_endpoint)
