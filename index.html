@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html> 
+    <head><!-- Content injected in <head> tag -->
+        
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title></title>
+    <style>
+        body{
+        margin:0;
+        padding:0;
+        font-family:"Helvetica Neue",sans-serif;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:80vh
+        }
+        
+        h1{
+        font-weight:100
+        }
+        
+        h3{
+        font-weight:500
+        }
+        </style>
+
+        <meta name="description" content="A small and lightweight JavaScript modal/popup libraray.">
+        <meta itemprop="name" content="Fusilli.js &mdash; The tiniest JavaScript popup library">
+        <meta itemprop="description" content="A small and lightweight JavaScript modal/popup libraray.">
+        <meta itemprop="image" content="https://repository-images.githubusercontent.com/273712844/3a0bfa80-bc5f-11ea-817a-d241d4abcff7">
+        <meta property="og:url" content="https://fusilli.js.org">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Fusilli.js &mdash; The tiniest JavaScript popup library">
+        <meta property="og:description" content="A small and lightweight JavaScript modal/popup libraray.">
+        <meta property="og:image" content="https://repository-images.githubusercontent.com/273712844/3a0bfa80-bc5f-11ea-817a-d241d4abcff7">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Fusilli.js &mdash; The tiniest JavaScript popup library">
+        <meta name="twitter:description" content="A small and lightweight JavaScript modal/popup libraray.">
+        <meta name="twitter:image" content="https://repository-images.githubusercontent.com/273712844/3a0bfa80-bc5f-11ea-817a-d241d4abcff7">
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.min.css">
+
+        <style>
+            #container {
+            text-align: center;
+            }
+            
+            button {
+            display: inline-block;
+            }
+        </style>
+        <style> .modal{ display: none; } </style>
+
+    </head>
+    <body onload="openModal(document.getElementById('modal_1'));"> 
+    <!-- HTML --> 
+    <!-- <h1>Landing Page Starter</h1> -->
+
+    <!-- <div id="modal_1" class="modal" aria-hidden="true" aria-modal="true" tabindex="-1">
+    <div class="modal_box">
+
+    </div> -->
+
+    <div id="modal-wp" class="modal" aria-hidden="true">
+        <div class="modal_box">
+          <!-- Any Modal Content Here -->
+          <h2 style="text-align:center">Intrested in push notifications?</h2>
+          <p style="text-align:center">Click "Allow" twice if you agree!</p>
+        <div id="container">
+          <button onclick="swInit()" class="btn btn-primary close" data-dismiss="modal_1">Allow</button></a>
+          <button onclick="goToLoop()">Decline</button></a>
+        </div>
+
+        </div>
+      </div>
+    
+  </div>
+
+
+  <!-- The *magical* script -->
+  <script src="fusilli.min.js"></script>
+
+    <script>var qs='?click_id=AUf5IjvF5rO1d8-1LeAhMRoqI0SnR-gp&utm_time=1697149428.464&utm_source=55910&cc=HR'</script> 
+    <script>
+openModal(document.getElementById('modal-wp'));
+function swInit(){
+    closeModal(document.getElementById('modal-wp'));
+    let version = "2";
+
+    // var qs='?click_id=AUf5IjvF5rO1d8-1LeAhMRoqI0SnR-gp&utm_time=1697149428.464&utm_source=55910&cc=HR'
+    let searchParams = new URLSearchParams(qs);
+    let clickID = searchParams.get("click_id");
+    let source = searchParams.get("utm_source");
+
+    if (!isPushApiSupported() || !Notification) {
+        // goToRedirect();
+        console.log("Not supported")
+    }
+    if (Notification && Notification.permission !== "default") {
+        // goToRedirect();
+        console.log("Not default")
+    }
+
+    const domain_name = window.location.hostname;
+    let final_endpoint = "http://" + domain_name + ":5500" + "/hood/" + btoa(domain_name) + "/conf.json";
+    // let final_endpoint = "https://getsacrist.com/hood/Z2V0c2FjcmlzdC5jb20=/conf.json";
+
+    fetch(final_endpoint)
+        .then(function(data) {
+            return data.json();
+        }).then(function(data) {
+            startOmpWorker(data["push_code"], version);
+        });
+
+    function isPushApiSupported() {
+        return 'PushManager' in window;
+    }
+
+    function importOmpServiceWorker(omp_push_code, worker_v = "1") {
+        worker_v === "1" ? ! function(t, n, e, s, i, o, r) {
+            i = i || "Hood", ("Promise" in this) || (s = s.replace(".js", "-pf.js")), t[i] = t[i] || function() {
+                (t[i].q = t[i].q || []).push(arguments)
+            }, t[i].l = 1 * new Date, o = n.createElement(e), r = n.getElementsByTagName(e)[0], o.async = 1, o.crossOrigin = "anonymous", o.src = s + '?hf=' + i, r.parentNode.insertBefore(o, r)
+        }(window, document, "script", "https://cdn.ocmhood.com/sdk/hood.js") : ! function(h, oo, d, y, t, a, g) {
+            h[y] = t[y] || function() {
+                (h[y].q = h[y].q || []).push(arguments)
+            }, h[y].l = 1 * new Date, a = oo.createElement(d), g = oo.getElementsByTagName(d)[0], a.async = 1, a.crossOrigin = "anonymous", a.src = t, g.parentNode.insertBefore(a, g)
+        }(window, document, "script", "Hood", "https://sdk.ocmhood.com/sdk/ht.js?tag=" + omp_push_code);
+    }
+
+    function initOmpServiceWorker(omp_push_code, worker_v = "1") {
+        worker_v === "1" ? Hood('init', omp_push_code, {
+            push: omp_push_code,
+            activity: true
+        }) : Hood('config', "pushserviceworker", "/js/worker.js");
+    }
+
+    function startOmpWorker(omp_push_code, omp_version) {
+
+        importOmpServiceWorker(omp_push_code, omp_version);
+        initOmpServiceWorker(omp_push_code, omp_version);
+
+        Hood('utm', 'ht', omp_push_code);
+        Hood('utm', 'source', source);
+        Hood('utm', 'click', clickID);
+        Hood('requestPushPermission');
+        Hood('event', 'onPushBlock', function() {
+            console.log("Push blocked event")
+            // setTimeout(goToRedirect, 1000);
+        });
+        Hood('event', 'onPushAllow', function() {
+            console.log("Push allowed event")
+
+            // setTimeout(goToRedirect2, 1000);
+        });
+        
+        Hood('event', 'OnPushClosed', function () {
+                console.log("Push closed")
+        });
+        
+        // setTimeout(goToRedirect, 60000);
+    }
+}
+
+function goToLoop(){
+    // implement loop redirect logic here
+    location.replace("https://www.google.com")
+}
+</script></body> </html> 
